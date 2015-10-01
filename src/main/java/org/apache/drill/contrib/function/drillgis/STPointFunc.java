@@ -6,6 +6,7 @@ import org.apache.drill.exec.expr.DrillSimpleFunc;
 import org.apache.drill.exec.expr.annotations.FunctionTemplate;
 import org.apache.drill.exec.expr.annotations.Output;
 import org.apache.drill.exec.expr.annotations.Param;
+import org.apache.drill.exec.expr.annotations.Workspace;
 import org.apache.drill.exec.expr.holders.Float8Holder;
 import org.apache.drill.exec.expr.holders.VarBinaryHolder;
 
@@ -26,8 +27,15 @@ public class STPointFunc implements DrillSimpleFunc {
     @Inject
     DrillBuf buffer;
     
-
+    @Workspace
+    com.vividsolutions.jts.geom.GeometryFactory geomFactory;
+    
+    @Workspace
+    com.vividsolutions.jts.io.WKBWriter wkbWriter;
+    
 	public void setup() {
+		geomFactory = new com.vividsolutions.jts.geom.GeometryFactory();
+		wkbWriter = new com.vividsolutions.jts.io.WKBWriter();
 	}
 
 	public void eval() {
@@ -35,9 +43,9 @@ public class STPointFunc implements DrillSimpleFunc {
 		double lon = lonParam.value;
 		double lat = latParam.value;
 
-		com.vividsolutions.jts.geom.Point point = new com.vividsolutions.jts.geom.GeometryFactory()
+		com.vividsolutions.jts.geom.Point point = geomFactory
 				.createPoint(new com.vividsolutions.jts.geom.Coordinate(lon, lat));
-		byte[] wkbPoint = new com.vividsolutions.jts.io.WKBWriter().write(point);
+		byte[] wkbPoint = wkbWriter.write(point);
 		//System.out.println(wkbPoint.toString());
 
 		out.buffer = buffer;
