@@ -6,7 +6,6 @@ import org.apache.drill.exec.expr.DrillSimpleFunc;
 import org.apache.drill.exec.expr.annotations.FunctionTemplate;
 import org.apache.drill.exec.expr.annotations.Output;
 import org.apache.drill.exec.expr.annotations.Param;
-import org.apache.drill.exec.expr.annotations.Workspace;
 import org.apache.drill.exec.expr.holders.Float8Holder;
 import org.apache.drill.exec.expr.holders.VarBinaryHolder;
 
@@ -16,26 +15,17 @@ import io.netty.buffer.DrillBuf;
 public class STPointFunc implements DrillSimpleFunc {
 	@Param
 	Float8Holder lonParam;
-	
+
 	@Param
 	Float8Holder latParam;
-	
-	
-    @Output
-    VarBinaryHolder out;
 
-    @Inject
-    DrillBuf buffer;
-    
-    @Workspace
-    com.vividsolutions.jts.geom.GeometryFactory geomFactory;
-    
-    @Workspace
-    com.vividsolutions.jts.io.WKBWriter wkbWriter;
-    
+	@Output
+	VarBinaryHolder out;
+
+	@Inject
+	DrillBuf buffer;
+
 	public void setup() {
-		geomFactory = new com.vividsolutions.jts.geom.GeometryFactory();
-		wkbWriter = new com.vividsolutions.jts.io.WKBWriter();
 	}
 
 	public void eval() {
@@ -43,14 +33,14 @@ public class STPointFunc implements DrillSimpleFunc {
 		double lon = lonParam.value;
 		double lat = latParam.value;
 
-		com.vividsolutions.jts.geom.Point point = geomFactory
-				.createPoint(new com.vividsolutions.jts.geom.Coordinate(lon, lat));
-		byte[] wkbPoint = wkbWriter.write(point);
-		//System.out.println(wkbPoint.toString());
+		com.esri.core.geometry.ogc.OGCPoint point = new com.esri.core.geometry.ogc.OGCPoint(
+				new com.esri.core.geometry.Point(lon, lat), com.esri.core.geometry.SpatialReference.create(4326));
 
-		out.buffer = buffer;
-	    out.start = 0;
-	    out.end = wkbPoint.length;
-	    buffer.setBytes(0, wkbPoint);
+		// System.out.println(wkbPoint.toString());
+		java.nio.ByteBuffer pointBytes = point.asBinary();
+		out.buffer =  buffer;
+		out.start = 0;
+		out.end = pointBytes.remaining();
+		buffer.setBytes(0, pointBytes);
 	}
 }
