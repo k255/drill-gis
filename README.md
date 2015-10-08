@@ -1,12 +1,15 @@
 # drill-gis
 
-drill-gis is a plugin for Apache Drill that supports spatial queries in a way similar to Postgres PostGIS extension. I came with the idea during [Tugdual Grall's talk] on Apache Drill at [Apache BigData]. The first prototype was ready the next day after the talk.
+drill-gis is a plugin for Apache Drill that supports spatial queries in a way similar to Postgres PostGIS extension. I came with the idea during [Tugdual Grall's talk] on Apache Drill at [Apache Big Data]. The first prototype was ready the next day after the talk.
+Currently it is at proposal/proof-of-concept stage.
 
 What is supported:
   - geometries with initial native binary representation (WKB)
   - functions to create geometries *ST_Point(lon, lat)*, *ST_GeomFromText(wkt_text)*
   - spatial functions *ST_DWithin(geom, geom, distance)*, *ST_Within(geom, geom)*
   - function to convert geometry from binary to text *ST_AsText*
+
+For an overview of spatial functions based on PostGIS you may refer: [PostGIS documentation]
 
 ## Installation
 Clone/download the sourcecode and run:
@@ -112,3 +115,4 @@ Apache 2.0 License
    [my fork of Apache Drill with drill-gis]: <https://github.com/k255/drill.git>
    [Tugdual Grall's talk]: <http://events.linuxfoundation.org/sites/events/files/slides/apache_drill_budapest_2015.pdf>
    [cities of the world]: <http://www.opengeocode.org/download.php#cities>
+   [PostGIS documentation]: <http://postgis.net/docs/reference.html>
