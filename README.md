@@ -50,8 +50,8 @@ when using [my fork of Apache Drill with drill-gis], sample file is on classpath
 select * from cp.`sample-data/CA-cities.csv` limit 5;
 ```
 
-You can see the dataset visualized here:
-* http://bl.ocks.org/anonymous/raw/20d87dd21e936ea3d314/
+You can see the dataset visualized here (can take a while):
+* [Sample dataset visualized]
 
 ### Spatial queries
 
@@ -81,7 +81,7 @@ select columns[2] as city, columns[4] as lon, columns[3] as lat
 ```
 
 which limits rows of our dataset to region near San Jose as shown here:
-* bl.ocks.org/d/ad56a1c850d03675c2d9/
+* [Sample dataset filtered based on polygon]
 
 Rows can be limited also based on distance (decimal degrees in this case) from given geometry:
 
@@ -94,7 +94,7 @@ select * from
     where isWithin = true;
 ```
 In this example rows are filtered based on distance (0.1deg ~= 11km) from San Jose city:
-* bl.ocks.org/d/cc5a6d695f3a915db5ad/
+* [Sample dataset filtered based on distance]
 
 ### Issues
 
@@ -116,3 +116,6 @@ Apache 2.0 License
    [Tugdual Grall's talk]: <http://events.linuxfoundation.org/sites/events/files/slides/apache_drill_budapest_2015.pdf>
    [cities of the world]: <http://www.opengeocode.org/download.php#cities>
    [PostGIS documentation]: <http://postgis.net/docs/reference.html>
+   [Sample dataset visualized]: <http://bl.ocks.org/anonymous/raw/20d87dd21e936ea3d314>
+   [Sample dataset filtered based on polygon]: <http://bl.ocks.org/d/ad56a1c850d03675c2d9>
+   [Sample dataset filtered based on distance]: <http://bl.ocks.org/d/cc5a6d695f3a915db5ad>
