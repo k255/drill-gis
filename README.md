@@ -1,7 +1,7 @@
 # drill-gis
 
 drill-gis is a plugin for Apache Drill that supports spatial queries in a way similar to Postgres PostGIS extension. I came with the idea during [Tugdual Grall's talk] on Apache Drill at [Apache Big Data]. The first prototype was ready the next day after the talk.
-Currently it is at proposal/proof-of-concept stage.
+Currently it is at proposal/proof-of-concept stage (checkout my drill fork with drill-gis at k255/drill).
 
 What is supported:
   - geometries with initial native binary representation (WKB)
@@ -39,15 +39,14 @@ The structure of the CSV is as follows:
 country, state_code, city, latitude, longitude
 ```
 
-Following examples are based on local queries i.e.:
-```
-select * from dfs.default.`/home/k255/drill/sample-data/CA-cities.csv` limit 5;
-```
-
-when using [my fork of Apache Drill with drill-gis], sample file is on classpath:
-
+Following examples are based on queries to sample file which is embedded in drill-gis jar file (classpath) i.e.:
 ```
 select * from cp.`sample-data/CA-cities.csv` limit 5;
+```
+
+but you can also query dataset from filesystem:
+```
+select * from dfs.default.`/home/k255/drill/sample-data/CA-cities.csv` limit 5;
 ```
 
 You can see the dataset visualized here (can take a while):
@@ -58,19 +57,19 @@ You can see the dataset visualized here (can take a while):
 Creating a simple (binary) geometry is as simple as:
 ```
 select *, ST_GeomFromText('POINT(-121.895 37.340)') as geom
-    from dfs.`default`.`/home/k255/drill/sample-data/CA-cities.csv` limit 1;
+    from cp.`sample-data/sample-data/CA-cities.csv` limit 1;
 ```
 Creating point geometry based on data field:
 ```
 select *, ST_Point(columns[4], columns[3]) as geom
-    from dfs.`default`.`/home/k255/drill/sample-data/CA-cities.csv` limit 1;
+    from cp.`sample-data/CA-cities.csv` limit 1;
 ```
 
 Common use case is to limit to boundary of given polygon:
 
 ```
 select columns[2] as city, columns[4] as lon, columns[3] as lat
-    from dfs.`default`.`/home/k255/drill/sample-data/CA-cities.csv`
+    from cp.`sample-data/CA-cities.csv`
     where
         ST_Within(
             ST_Point(columns[4], columns[3]),
@@ -89,7 +88,7 @@ Rows can be limited also based on distance (decimal degrees in this case) from g
 select * from
     (select columns[2] as location, columns[4] as lon, columns[3] as lat,
         ST_DWithin(ST_Point(-121.895, 37.339), ST_Point(columns[4], columns[3]), 0.1) as isWithin
-        from dfs.`default`.`/home/k255/drill/sample-data/CA-cities.csv`
+        from cp.`sample-data/CA-cities.csv`
     )
     where isWithin = true;
 ```
@@ -98,7 +97,7 @@ In this example rows are filtered based on distance (0.1deg ~= 11km) from San Jo
 
 ### Issues
 
- - varbinary in Apache Drill can hold up to 255 bytes which limits more complex geometries
+ - ~~varbinary in Apache Drill can hold up to 255 bytes which limits more complex geometries~~
 
 ## Author
 
