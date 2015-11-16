@@ -3,10 +3,10 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.apache.drill.contrib.function.drillgis</groupId>
 	<artifactId>drill-gis</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<properties>
 		<gis.TestSuite>**/GISTestSuite.class</gis.TestSuite>
-		<drill.version>1.2.0-SNAPSHOT</drill.version>
+		<drill.version>1.3.0-SNAPSHOT</drill.version>
 	</properties>
 	<dependencies>
 		<dependency>
