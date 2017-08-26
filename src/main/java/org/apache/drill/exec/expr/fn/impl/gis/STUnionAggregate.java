@@ -34,7 +34,7 @@ import com.esri.core.geometry.SpatialReference;
 
 import io.netty.buffer.DrillBuf;
 
-@FunctionTemplate(name = "st_union", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
+@FunctionTemplate(name = "st_unionaggregate", scope = FunctionTemplate.FunctionScope.POINT_AGGREGATE)
 public class STUnionAggregate implements DrillAggFunc {
   @Param NullableVarBinaryHolder in;
   @Workspace ObjectHolder value;
@@ -87,7 +87,7 @@ public class STUnionAggregate implements DrillAggFunc {
       if(srid.value != 0){
         spatialRef = com.esri.core.geometry.SpatialReference.create(4326);
       }
-      com.esri.core.geometry.Geometry[] geomArr = 
+      com.esri.core.geometry.Geometry[] geomArr =
           (com.esri.core.geometry.Geometry[]) tmp.toArray( new com.esri.core.geometry.Geometry[0] );
       com.esri.core.geometry.Geometry geom = com.esri.core.geometry.GeometryEngine.union(geomArr, spatialRef);
 
@@ -111,4 +111,3 @@ public class STUnionAggregate implements DrillAggFunc {
     nonNullCount.value = 0;
   }
 }
-
