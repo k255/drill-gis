@@ -1,5 +1,7 @@
 # drill-gis
 
+[![Build Status](https://travis-ci.org/k255/drill-gis.svg?branch=master)](https://travis-ci.org/k255/drill-gis)
+
 drill-gis is a plugin for [Apache Drill] that supports spatial queries in a way similar to Postgres PostGIS extension. I came with the idea during [Tugdual Grall's talk] on [Apache Drill] at [Apache Big Data]. The first prototype was ready the next day after the talk.
 Currently it is at proposal/proof-of-concept stage (checkout my drill fork with drill-gis at k255/drill).
 
