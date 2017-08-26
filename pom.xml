@@ -6,7 +6,7 @@
 	<version>0.0.3-SNAPSHOT</version>
 	<properties>
 		<gis.TestSuite>**/GISTestSuite.class</gis.TestSuite>
-		<drill.version>1.3.0-SNAPSHOT</drill.version>
+		<drill.version>1.2.0</drill.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -24,7 +24,7 @@
             <artifactId>proj4j</artifactId>
             <version>0.1.0</version>
         </dependency>
-		
+
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.apache.drill.exec</groupId>
