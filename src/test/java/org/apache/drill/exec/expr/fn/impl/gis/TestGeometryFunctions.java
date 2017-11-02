@@ -96,7 +96,7 @@ public class TestGeometryFunctions extends BaseTestQuery {
       .build()
       .run();
   }
-  
+
 
   @Test
   public void testSTX_STYGivesNaNForNonPointGeometry() throws Exception {
@@ -129,7 +129,7 @@ public class TestGeometryFunctions extends BaseTestQuery {
       .baselineValues(false)
       .build()
       .run();
-    
+
     testBuilder()
     .sqlQuery("SELECT ST_Intersects(ST_GeomFromText('POINT(0 0)'), ST_GeomFromText('LINESTRING(0 0,0 2)')) "
         + "from (VALUES(1))")
@@ -269,5 +269,44 @@ public class TestGeometryFunctions extends BaseTestQuery {
       .baselineValues(targetX, targetY)
       .build()
       .run();
+  }
+
+  @Test
+  public void testUnionAggregateQuery() throws Exception {
+    String targetAll = "MULTIPOLYGON (((0 -1, 1 -1, 1 0, 1 1, 0 1, 0 0, 0 -1)), "
+                        + "((10 9, 11 9, 11 10, 11 11, 10 11, 10 10, 10 9)))";
+    String targetFirstGroup = "POLYGON ((0 -1, 1 -1, 1 0, 1 1, 0 1, 0 0, 0 -1))";
+    String targetSecondGroup = "POLYGON ((10 9, 11 9, 11 10, 11 11, 10 11, 10 10, 10 9))";
+
+    testBuilder()
+      .sqlQuery("select ST_AsText(ST_UnionAggregate(ST_GeomFromText(columns[1]))) from cp.`sample-data/polygons.tsv`")
+      .ordered().baselineColumns("EXPR$0")
+      .baselineValues(targetAll)
+      .build()
+      .run();
+
+    testBuilder()
+      .sqlQuery("select columns[0], ST_AsText(ST_UnionAggregate(ST_GeomFromText(columns[1])))"
+          + " from cp.`sample-data/polygons.tsv` group by columns[0] having columns[0] = 1")
+      .ordered().baselineColumns("EXPR$0", "EXPR$1")
+      .baselineValues("1", targetFirstGroup)
+      .build()
+      .run();
+
+    testBuilder()
+      .sqlQuery("select columns[0], ST_AsText(ST_UnionAggregate(ST_GeomFromText(columns[1])))"
+          + " from cp.`sample-data/polygons.tsv` group by columns[0] having columns[0] = 2")
+      .ordered().baselineColumns("EXPR$0", "EXPR$1")
+      .baselineValues("2", targetSecondGroup)
+      .build()
+      .run();
+
+    testBuilder()
+    .sqlQuery("select count(*) from (select columns[0], ST_AsText(ST_UnionAggregate(ST_GeomFromText(columns[1])))"
+        + " from cp.`sample-data/polygons.tsv` group by columns[0])")
+    .ordered().baselineColumns("EXPR$0")
+    .baselineValues(2L)
+    .build()
+    .run();
   }
 }

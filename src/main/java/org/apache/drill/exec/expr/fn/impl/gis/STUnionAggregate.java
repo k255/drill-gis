@@ -60,19 +60,19 @@ public class STUnionAggregate implements DrillAggFunc {
         // processing nullable input and the value is null, so don't do anything...
         break sout;
       }
-    nonNullCount.value = 1;
-    java.util.ArrayList<com.esri.core.geometry.Geometry> tmp = (java.util.ArrayList<com.esri.core.geometry.Geometry>) value.obj;
+      nonNullCount.value = 1;
+      java.util.ArrayList<com.esri.core.geometry.Geometry> tmp = (java.util.ArrayList<com.esri.core.geometry.Geometry>) value.obj;
 
-    com.esri.core.geometry.ogc.OGCGeometry geom;
-    geom = com.esri.core.geometry.ogc.OGCGeometry
-        .fromBinary(in.buffer.nioBuffer(in.start, in.end - in.start));
+      com.esri.core.geometry.ogc.OGCGeometry geom;
+      geom = com.esri.core.geometry.ogc.OGCGeometry
+          .fromBinary(in.buffer.nioBuffer(in.start, in.end - in.start));
 
-    tmp.add(geom.getEsriGeometry());
+      tmp.add(geom.getEsriGeometry());
 
-    if(init.value == 0){
-      init.value = 1;
-      srid.value = geom.SRID();
-    }
+      if(init.value == 0) {
+        init.value = 1;
+        srid.value = geom.SRID();
+      }
     } // end of sout block
   }
 
@@ -107,6 +107,7 @@ public class STUnionAggregate implements DrillAggFunc {
   @Override
   public void reset() {
     value = new ObjectHolder();
+    value.obj = new java.util.ArrayList<com.esri.core.geometry.Geometry>();
     init.value = 0;
     nonNullCount.value = 0;
   }
